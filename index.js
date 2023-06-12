@@ -30,10 +30,20 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    client.connect();
 
+    const userCollection = client.db('usersNindo').collection('users')
 
-
+//api to read all user data
+    app.get('/users', async(req,res) => {
+	let query = {}
+	if(req.query?.email){
+		query = {email:req.query.email}
+	}
+	const queryResult = await userCollection.find(query).toArray()
+	res.send(queryResult)
+	console.log(queryResult)
+    })
 
 
 
@@ -43,7 +53,7 @@ async function run() {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    client.close();
+    //await client.close();
   }
 }
 run().catch(console.dir);
