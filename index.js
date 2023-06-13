@@ -15,7 +15,7 @@ app.get('/',(req,res)=>{
 
 //MongoDB code starts here
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.c32luun.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -34,6 +34,8 @@ async function run() {
 
     const userCollection = client.db('usersNindo').collection('users')
 
+///// userCollection apis
+
 //api to read all user data
     app.get('/users', async(req,res) => {
 	let query = {}
@@ -44,6 +46,21 @@ async function run() {
 	res.send(queryResult)
 	console.log(queryResult)
     })
+
+//api to post all user data
+   app.post('/users', async(req,res)=>{
+	const newUser = req.body
+	const result = await userCollection.insertOne(newUser)
+	res.send(result)
+	console.log(newUser)
+   })
+
+//api to delete an user
+  app.delete('/users/:id', async(req,res) => {
+	const query = {_id: new ObjectId(req.params.id)}
+	const result = await userCollection.deleteOne(query)
+	res.send(result)
+  })
 
 
 
