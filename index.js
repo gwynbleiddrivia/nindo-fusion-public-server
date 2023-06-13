@@ -46,6 +46,15 @@ async function run() {
 	res.send(queryResult)
 	console.log(queryResult)
     })
+//api to read single user data
+    app.get('/users/:id', async(req,res) => {
+	const query = {_id: new ObjectId(req.params.id)}
+	const queryResult = await userCollection.find(query).toArray()
+	res.send(queryResult)
+	console.log(queryResult)
+    })
+
+
 
 //api to post all user data
    app.post('/users', async(req,res)=>{
