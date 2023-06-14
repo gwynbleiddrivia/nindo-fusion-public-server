@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT||5000
+const jwt = require('jsonwebtoken');
+
 
 app.use(cors())
 app.use(express.json())
@@ -33,6 +35,14 @@ async function run() {
     client.connect();
 
     const userCollection = client.db('usersNindo').collection('users')
+
+/////jwt api
+    app.post('/jwt',(req,res)=>{
+	const user = req.body
+	const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+	res.send({ token })
+    })
+
 
 ///// userCollection apis
 
