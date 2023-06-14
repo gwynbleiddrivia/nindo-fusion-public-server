@@ -76,7 +76,7 @@ async function run() {
 	res.send(result)
   })
 //api to patch user role
-  app.patch('users/admin/:id', async(req,res) =>{
+  app.patch('users/:id', async(req,res) =>{
 	const query = {_id: new ObjectId(req.params.id)}
 	const updateDoc = {
 		$set: {
