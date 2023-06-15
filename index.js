@@ -8,22 +8,6 @@ const jwt = require('jsonwebtoken');
 app.use(cors())
 app.use(express.json())
 require('dotenv').config()
-const verifyJWT = (req, res, next) => {
-	const authorization = req.headers.authorization
-	if(!authorization){
-		return res.status(401).send({error: true, message: 'unauthorized access'})
-	}
-
-	const token = authorization.split(' ')[1]
-	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded)=>{
-		if(err){
-			return res.status(401).send({error:true, message:'unauthorized access'})
-		}
-		req.decoded = decoded
-		next()
-	})
-} 
-
 
 app.get('/',(req,res)=>{
 	res.send('nindo fusion camp server is running')
@@ -51,19 +35,14 @@ async function run() {
     client.connect();
 
     const userCollection = client.db('usersNindo').collection('users')
+    const classCollection = client.db('classesNindo').collection('classes')
 
-/////jwt api
-    app.post('/jwt',(req,res)=>{
-	const user = req.body
-	const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
-	res.send({ token })
-    })
 
 
 ///// userCollection apis
 
 //api to read all user data
-    app.get('/users', async(req,res) => {
+    app.get('/users',  async(req,res) => {
 	let query = {}
 	if(req.query?.email){
 		query = {email:req.query.email}
@@ -72,6 +51,7 @@ async function run() {
 	res.send(queryResult)
 	console.log(queryResult)
     })
+    
 //api to read single user data
     app.get('/users/:id', async(req,res) => {
 	const query = {_id: new ObjectId(req.params.id)}
@@ -101,6 +81,8 @@ async function run() {
 	const result = await userCollection.deleteOne(query)
 	res.send(result)
   })
+
+
 //api to make user admin
   app.patch('/users/admin/:id', async(req,res) =>{
 	const query = {_id: new ObjectId(req.params.id)}
@@ -124,6 +106,14 @@ async function run() {
 	res.send(result)
   })
 
+///// userCollection apis
+//api to post all classes data
+   app.post('/classes', async(req,res)=>{
+	const newClass = req.body
+	const result = await classCollection.insertOne(newClass)
+	res.send(result)
+	console.log(newClass)
+   })
 
 
     // Send a ping to confirm a successful connection
