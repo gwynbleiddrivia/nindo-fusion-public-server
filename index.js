@@ -111,7 +111,7 @@ async function run() {
 
 ///// classCollection apis
 //api to make class approved
-  app.patch('/users/approved/:id', async(req,res) =>{
+  app.patch('/classes/approved/:id', async(req,res) =>{
 	const query = {_id: new ObjectId(req.params.id)}
 	const updateDoc = {
 		$set: {
@@ -122,7 +122,7 @@ async function run() {
 	res.send(result)
   })
 //api to make class denied
-  app.patch('/users/denied/:id', async(req,res) =>{
+  app.patch('/classes/denied/:id', async(req,res) =>{
 	const query = {_id: new ObjectId(req.params.id)}
 	const updateDoc = {
 		$set: {
