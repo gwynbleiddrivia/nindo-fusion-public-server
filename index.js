@@ -47,6 +47,9 @@ async function run() {
 	if(req.query?.email){
 		query = {email:req.query.email}
 	}
+	if(req.query?.role){
+		query = {role:req.query.role}
+	}
 	const queryResult = await userCollection.find(query).toArray()
 	res.send(queryResult)
 	console.log(queryResult)
@@ -106,13 +109,70 @@ async function run() {
 	res.send(result)
   })
 
-///// userCollection apis
+///// classCollection apis
+//api to make class approved
+  app.patch('/users/approved/:id', async(req,res) =>{
+	const query = {_id: new ObjectId(req.params.id)}
+	const updateDoc = {
+		$set: {
+			status: 'approved'
+		}
+	}
+	const result = await classCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
+//api to make class denied
+  app.patch('/users/denied/:id', async(req,res) =>{
+	const query = {_id: new ObjectId(req.params.id)}
+	const updateDoc = {
+		$set: {
+			status: 'denied'
+		}
+	}
+	const result = await classCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
 //api to post all classes data
    app.post('/classes', async(req,res)=>{
 	const newClass = req.body
 	const result = await classCollection.insertOne(newClass)
 	res.send(result)
 	console.log(newClass)
+   })
+
+//api to read all classes data
+    app.get('/classes',  async(req,res) => {
+	let query = {}
+	if(req.query?.email){
+		query = {email:req.query.email}
+	}
+	const queryResult = await classCollection.find(query).toArray()
+	res.send(queryResult)
+	console.log(queryResult)
+    })
+//api to update class info
+   app.put('/classes/:id', async(req,res) =>{
+	const id = req.params.id
+	const updatedClass = req.body
+	const filter = {_id: new ObjectId(id)}
+	const options = {upsert: true}
+	const updatedInfo = {
+		$set:{
+			classname: updatedClass.classname,
+			classimage: updatedClass.classimage,
+			availableseats: updatedClass.availableseats,
+			price: updatedClass.price
+		}
+	}
+	const result = await classCollection.updateOne(filter, updatedInfo, options)
+	res.send(result)
+   })
+//api to read single class info
+   app.get('/classes/:id', async(req,res)=>{
+	const id = req.params.id
+	const query = {_id: new ObjectId(id)}
+	const result = await classCollection.find(query).toArray()
+	res.send(result)
    })
 
 
