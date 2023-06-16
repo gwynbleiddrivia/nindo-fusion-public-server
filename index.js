@@ -150,7 +150,19 @@ async function run() {
 	res.send(queryResult)
 	console.log(queryResult)
     })
-//api to update class info
+//api to give class feedback
+  app.put('/classes/feedback/:id', async(req,res) =>{
+  	const feedback = req.body.feedback
+	const query = {_id: new ObjectId(req.params.id)}
+	const updateDoc = {
+		$set: {
+			feedback: feedback
+		}
+	}
+	const result = await classCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
+//api to update class feedback old
    app.put('/classes/:id', async(req,res) =>{
 	const id = req.params.id
 	const updatedClass = req.body
