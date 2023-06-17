@@ -230,7 +230,7 @@ async function run() {
 		query = {email:req.query.email}
 	}
 	if(req.query?.ascended){
-		sortquery = {'enrolled':1}
+		sortquery = {'availableseats':1}
 	}
 	const queryResult = await classCollection.find(query).sort(sortquery).toArray()
 	res.send(queryResult)
