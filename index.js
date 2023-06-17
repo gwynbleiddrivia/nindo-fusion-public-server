@@ -219,6 +219,33 @@ async function run() {
 	const result = await classCollection.updateOne(query, updateDoc)
 	res.send(result)
   })
+//api to update class enroll
+  app.put('/classes/enrolled/:id',async(req,res) => {
+	const enrolled = req.body.enrolled
+	const query = {_id: new ObjectId(req.params.id)}
+	const updateDoc = {
+		$set: {
+			enrolled: enrolled
+		}
+	}
+	const result = await classCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
+//api to update class availableseats
+  app.put('/classes/availableseats/:id',async(req,res) => {
+	const availableseats = req.body.availableseats
+	const query = {_id: new ObjectId(req.params.id)}
+	const updateDoc = {
+		$set: {
+			availableseats: availableseats
+		}
+	}
+	const result = await classCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
+
+
+
 //api to update class feedback old
    app.put('/classes/:id', async(req,res) =>{
 	const id = req.params.id
