@@ -36,7 +36,38 @@ async function run() {
 
     const userCollection = client.db('usersNindo').collection('users')
     const classCollection = client.db('classesNindo').collection('classes')
+    const selstudclassCollection = client.db('classesNindo').collection('selclasses')
+    const enrstudclassCollection = client.db('classesNindo').collection('enrclasses')
 
+///// selstudclassCollection apis
+//api to post a selected class
+   app.post('/selectclasses', async(req,res)=>{
+	const newClass = req.body
+	//const query = {classid: newClass.classid}
+	//const existingClass = await selstudclassCollection.findOne(query)
+	//if (existingClass){
+	//	return res.send({message: "this class already exists"})
+	//}
+	const result = await selstudclassCollection.insertOne(newClass)
+	res.send(result)
+	console.log(newClass)
+   })
+//api to read all selected classes
+   app.get('/selectclasses',async(req,res)=>{
+	const query = {studentid: req.body.studentid}
+	const queryResult = await selstudclassCollection.find(query).toArray()
+	res.send(queryResult)
+   })
+
+//api to delete a selected class
+  app.delete('/selectclasses/:id', async(req,res) => {
+	const query = {_id: new ObjectId(req.params.id)}
+	const result = await selstudclassCollection.deleteOne(query)
+	res.send(result)
+  })
+
+
+///// enrstudclassCollection
 
 
 ///// userCollection apis
