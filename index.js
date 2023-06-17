@@ -229,6 +229,9 @@ async function run() {
 	if(req.query?.email){
 		query = {email:req.query.email}
 	}
+	if(req.query?.status){
+		query = {status:req.query.status}
+	}
 	if(req.query?.ascended){
 		sortquery = {'availableseats':1}
 	}
