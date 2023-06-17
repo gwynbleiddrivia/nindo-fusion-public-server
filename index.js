@@ -43,31 +43,57 @@ async function run() {
 //api to post a selected class
    app.post('/selectclasses', async(req,res)=>{
 	const newClass = req.body
-	//const query = {classid: newClass.classid}
-	//const existingClass = await selstudclassCollection.findOne(query)
-	//if (existingClass){
-	//	return res.send({message: "this class already exists"})
-	//}
 	const result = await selstudclassCollection.insertOne(newClass)
 	res.send(result)
 	console.log(newClass)
    })
 //api to read all selected classes
    app.get('/selectclasses',async(req,res)=>{
-	const query = {studentid: req.body.studentid}
+	let query = {}
+	if(req.query?.studentid){
+		query = {studentid: req.body.studentid}
+	}
+	if(req.query?.classid){
+		query = {classid: req.query.classid}
+	}
 	const queryResult = await selstudclassCollection.find(query).toArray()
 	res.send(queryResult)
    })
 
 //api to delete a selected class
-  app.delete('/selectclasses/:id', async(req,res) => {
-	const query = {_id: new ObjectId(req.params.id)}
+  app.delete('/selectclasses', async(req,res) => {
+	const query = {classid: req.query.classid}
 	const result = await selstudclassCollection.deleteOne(query)
 	res.send(result)
   })
+ 
+
 
 
 ///// enrstudclassCollection
+
+   app.post('/enrclasses', async(req,res)=>{
+	const newClass = req.body
+	const result = await enrstudclassCollection.insertOne(newClass)
+	res.send(result)
+	console.log(newClass)
+   })
+
+   app.get('/enrclasses',async(req,res)=>{
+	let query = {}
+	if(req.query?.studentid){
+		query = {studentid: req.body.studentid}
+	}
+	if(req.query?.classid){
+		query = {classid: req.query.classid}
+	}
+	const queryResult = await enrstudclassCollection.find(query).toArray()
+	res.send(queryResult)
+   })
+
+
+
+
 
 
 ///// userCollection apis
