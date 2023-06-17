@@ -71,14 +71,14 @@ async function run() {
 
 
 ///// enrstudclassCollection
-
+//api to post in enrclass collection
    app.post('/enrclasses', async(req,res)=>{
 	const newClass = req.body
 	const result = await enrstudclassCollection.insertOne(newClass)
 	res.send(result)
 	console.log(newClass)
    })
-
+//api to read all enrolled classes
    app.get('/enrclasses',async(req,res)=>{
 	let query = {}
 	if(req.query?.studentid){
@@ -90,6 +90,31 @@ async function run() {
 	const queryResult = await enrstudclassCollection.find(query).toArray()
 	res.send(queryResult)
    })
+
+//api to update class enroll
+  app.put('/enrclasses',async(req,res) => {
+	const enrolled = req.body.enrolled
+	const query = {classid: req.query.classid}
+	const updateDoc = {
+		$set: {
+			enrolled: enrolled
+		}
+	}
+	const result = await enrstudclassCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
+//api to update class availableseats
+  app.put('/enrclasses',async(req,res) => {
+	const availableseats = req.body.availableseats
+	const query = {classid: req.query.classid}
+	const updateDoc = {
+		$set: {
+			availableseats: availableseats
+		}
+	}
+	const result = await enrstudclassCollection.updateOne(query, updateDoc)
+	res.send(result)
+  })
 
 
 
@@ -200,10 +225,14 @@ async function run() {
 //api to read all classes data
     app.get('/classes',  async(req,res) => {
 	let query = {}
+	let sortquery = {}
 	if(req.query?.email){
 		query = {email:req.query.email}
 	}
-	const queryResult = await classCollection.find(query).toArray()
+	if(req.query?.ascended){
+		sortquery = {'enrolled':1}
+	}
+	const queryResult = await classCollection.find(query).sort(sortquery).toArray()
 	res.send(queryResult)
 	console.log(queryResult)
     })
